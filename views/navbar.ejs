@@ -1,0 +1,88 @@
+<header id="header">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark"> 
+    <a class="navbar-brand" href="/home"><img src="https://tip.edu.ph/assets/headerfooter/tip-logo.png" class="img-fluid" id="tiplogo" alt="OSA"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="/lost" class="nav-link nav-btn btn-warning">
+            <span class="text-dark"><i aria-hidden="true" class="fa fa-plus text-dark"></i>&nbsp;Lost</span>
+          </a>
+        </li>
+        <li>&nbsp;</li>
+        <li class="nav-item">
+          <a href="/found" class="nav-link nav-btn btn-warning">
+            <span class="text-dark"><i aria-hidden="true" class="fa fa-plus text-dark"></i>&nbsp;Found</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav my-auto" style="margin-right:6rem;"> 
+        <li class="nav-item dropdown"> 
+          <a onclick="removeNumber()" class="nav-link dropdown-toggle" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="notificationDropdown" style="margin-left: -24em;">
+            <% if (typeof notifJoined !== 'undefined') { 
+              notifJoined = notifJoined.filter(data => { return data.status != "Archived"})
+              %>
+            <div style="border-bottom: 1px solid black; font-weight:bold;padding: 10px 1em;">You have <%= notifJoined.length %> notifications.</div> 
+            <% for (let i = 0; i < notifJoined.length && i < 12; i++) { 
+              if (notifJoined[i].status != "Archived") {
+              if (typeof notifJoined[i].message != "undefined") { %> 
+                <a class="dropdown-item" href="/announcementView"><%= notifJoined[i].message.substring(0, 35) %></a> 
+              <% } else { %>
+                <a class="dropdown-item" href="/appointmentView/<%=notifJoined[i].id%>">Your appointment is <%= notifJoined[i].status %>. Click for more details. </a> 
+            <% }}}} %>
+          </div>
+        </li>           
+        <li class="nav-item">
+          <a class="nav-link text-warning" id="profileButton" data-toggle="modal" data-target="#userProfileModal" href="/profile"><i class="fas fa-user"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger" id="logoutButton" href="/logout">Logout</a>
+        </li>       
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <% if (user) { %>
+              <p><strong>Name:</strong> <%= user.name %></p>
+              <p><strong>Student Number:</strong> <%= user.studentNumber %></p>
+              <p><strong>Email:</strong> <%= user.email %></p>
+              <p><strong>Contact Number:</strong> <%= user.contactNumber %></p>
+              <center>
+              <a href="/edit-profile" class="nav-link nav-btn btn-sm btn-warning" style="width: 8em; display: flex;justify-content: center; align-items: center;">
+                <span>Edit Profile</span>
+              </a>
+            </center>
+            <% } else { %>
+              <p>Please <a href="/login">log in</a> to view your profile.</p>
+            <% } %>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("profileButton").addEventListener("click", function (event) {
+    event.preventDefault(); 
+    $("#userProfileModal").modal("show"); 
+  });
+
+  function removeNumber() {
+  document.getElementsByClassName('badge')[0].innerHTML = '';
+  }
+</script>
